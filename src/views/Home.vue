@@ -8,8 +8,11 @@
       <button v-for="state in states" :class="{'selected':(isStateSelected(state))}" @click="toggleSelectState(state)">{{state}}</button>
     </div>
 
-    <div v-for="cd in allCovidData">
-      <span> * </span>
+    <div v-for="cd, key in allCovidData">
+      <h3>{{ key }}</h3>
+      <div v-for="st in cd">
+        <p>{{ st.date }} : {{ st.positiveIncrease }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -75,11 +78,7 @@ export default {
       fetch('https://covidtracking.com/api/v1/states/daily.json')
         .then(response => response.json())
         .then(data => {
-
-          normalizeDataByState(data)
-
-          console.log(data)
-
+          this.normalizeDataByState(data)
         })
     },
 
@@ -91,10 +90,15 @@ export default {
         stateNormedData[state] = []
       })
 
-      
-
+      data.map(cd => {
+        stateNormedData[cd.state].push(cd)
+      })
 
       this.allCovidData = stateNormedData
+
+      //TODO - seven-day avgs
+
+      console.log(this.allCovidData.IL[0].date, this.allCovidData.IL[0].positiveIncrease)
 
     },
 
