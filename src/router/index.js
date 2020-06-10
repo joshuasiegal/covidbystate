@@ -8,7 +8,21 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    // children: [
+    //   {
+    //     path: ':statestring',
+    //     name: 'Home',
+    //     component: Home,
+    //     props: true 
+    //   },
+    // ]
+  },
+  {
+    path: '/:statestring',
+    name: 'Home',
+    component: Home,
+    props: true 
   },
   {
     path: '/about',
