@@ -11,7 +11,7 @@
     <div v-for="cd, key in allCovidData">
       <h3>{{ key }}</h3>
       <div v-for="st in cd">
-        <p>{{ st.date }} : {{ st.positiveIncrease }}</p>
+        <p>{{ st.date }} : {{ st.percentOfHighPoint }} : {{st.rollingAverage}}</p>
       </div>
     </div>
   </div>
@@ -65,9 +65,11 @@ export default {
   props:['statestring'],
 
   data: () => ({
-    allCovidData: [],
+    allCovidData: {},
     states: ['AK', 'AL', 'AR', 'AS', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'GU', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MP', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UM', 'UT', 'VA', 'VI', 'VT', 'WA', 'WI', 'WV', 'WY'],
-    selectedStates: []
+    selectedStates: [],
+    stateMetaData: {},
+    rollingAvgSize: 3
   }),
 
   methods: {
@@ -86,19 +88,71 @@ export default {
 
       let stateNormedData = {};
 
+      //prefill stateNormedData and stateMetaData for states
       this.states.map(state => {
         stateNormedData[state] = []
+        this.stateMetaData[state] = {}
       })
 
-      data.map(cd => {
+
+      //manipulate data
+
+      let dataLength = data.length
+      
+      //fill stateNormedData with data per state
+      for (let d=0; d<dataLength; d++) {
+        let cd = data[d]
         stateNormedData[cd.state].push(cd)
-      })
+      }
 
+      //make high points
+      for (let state in stateNormedData) {
+        let theStateData = stateNormedData[state]
+        let theStateDataLength = theStateData.length
+        let stateMeta = this.stateMetaData[state]
+        stateMeta.highPoint = 0
+
+        for (let hp=0; hp<theStateDataLength; hp++) {
+          let currentData = theStateData[hp]
+          let currentHighPoint = stateMeta.highPoint
+          let posIncrease = currentData.positiveIncrease
+
+          if (posIncrease > currentHighPoint) {
+            stateMeta.highPoint = posIncrease
+          }
+        }
+      }
+
+      let rollingAvgSize = this.rollingAvgSize
+
+      // make high point percents and rolling averages
+      for (let state in stateNormedData) {
+        let theStateData = stateNormedData[state]
+        let theStateDataLength = theStateData.length
+        let stateMeta = this.stateMetaData[state]
+
+        let avgBuffer = []
+        
+        for (let hp=0; hp<theStateDataLength; hp++) {
+          let currentData = theStateData[hp]
+          let posIncrease = currentData.positiveIncrease
+          
+          //normalize
+          currentData.percentOfHighPoint = Math.round((posIncrease / stateMeta.highPoint) * 100)
+        
+          //rolling avg
+          avgBuffer.push(posIncrease)
+          if (avgBuffer.length > rollingAvgSize) {
+            avgBuffer.shift()
+          }
+          currentData.rollingAverage = avgBuffer.reduce((acc, cur) => {
+            return Math.round(acc + cur / rollingAvgSize)
+          })
+        }
+      }
+
+      //assign to data
       this.allCovidData = stateNormedData
-
-      //TODO - seven-day avgs
-
-      console.log(this.allCovidData.IL[0].date, this.allCovidData.IL[0].positiveIncrease)
 
     },
 
