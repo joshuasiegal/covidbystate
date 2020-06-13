@@ -4,7 +4,6 @@
 
     <button @click="getCovidData">TEST GET DATA</button>
 
-
     <div>
       <chart-buttons :selected-states="selectedStates" :states="states"></chart-buttons>
 
@@ -15,7 +14,7 @@
       </div>
     </div>
 
-    <p>This site is meant to show the differences in cases in each state based on daily cases, normalized to each state's largest single day of cases, on a 7-day rolling average.</p>
+    <p>This site shows the trajectory in daily cases in each state, normalized to each state's largest single day of cases, on a 7-day rolling average.</p>
 
 
   </div>
@@ -215,47 +214,12 @@ export default {
     },
 
 
-    // toggleSelectState(state) {
-    //   let stateIndex = this.statesForURL.indexOf(state)
-    //   if (stateIndex == -1) {
-    //     this.statesForURL.push(state)
-    //   } else {
-    //     this.statesForURL.splice(stateIndex, 1)
-    //   }
-
-    //   this.updateURL()
-
-    //   if (this.allCovidData.populated){
-    //     this.makeChartData()
-    //   }
-
-    // },
-
-    // isStateSelected(state) {
-    //   return (this.selectedStates.indexOf(state) >= 0)
-    // },
-
     setInitialStates() {
       this.selectedStates = (this.statestring) ? this.statestring.split('|') : []
       if (this.allCovidData.populated){
         this.makeChartData()
       }
-    },
-
-    // clearSelections() {
-    //   this.statesForURL = []
-    //   this.updateURL()
-    // },
-
-    // selectAllStates() {
-    //   this.statesForURL = this.states
-    //   this.updateURL()
-    // },
-
-    // updateURL() {
-    //   let newParam = this.statesForURL.join('|')
-    //   this.$router.push({path: `/${newParam}`})
-    // }
+    }
 
   },
 

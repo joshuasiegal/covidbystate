@@ -2,7 +2,7 @@
 
 
  - Cache data in localhost with date
- 
+
  - Ignore extraneous data in URL hash
 
 
@@ -27,6 +27,8 @@
  - Page fonts / colors?
 
  - Mobile
+
+ - Deploy shiz
 
 
 
