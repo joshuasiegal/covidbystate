@@ -31,8 +31,6 @@ export default {
   methods: {
     createChart() {
 
-      console.log(this.chartData)
-
       if (!this.chartData) { return false }
 
       Highcharts.chart('chart', {
@@ -53,7 +51,7 @@ export default {
         },
         yAxis: {
             title: {
-                //text: 'Exchange rate'
+                text: '% of Highest Value, 7-day Rolling Average'
             }
         },
         /*

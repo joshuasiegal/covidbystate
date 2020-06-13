@@ -1,25 +1,22 @@
 <template>
   <div id="home">
-    <h2>Covid By State</h2>
+    <h2>Compare Covid By State</h2>
 
     <button @click="getCovidData">TEST GET DATA</button>
 
-    <div id="state-grid">
-      <button v-for="state in states" :class="{'selected':(isStateSelected(state))}" @click="toggleSelectState(state)">{{state}}</button>
-    </div>
 
-    <div id="chart-container">
-      <chart :chart-data="stateChartData"></chart>
-    </div>
+    <div>
+      <chart-buttons :selected-states="selectedStates" :states="states"></chart-buttons>
 
-    <!--
-    <div v-for="cd, key in allCovidData">
-      <h3>{{ key }}</h3>
-      <div v-for="st in cd">
-        <p>{{ st.date }} : {{ st.percentOfHighPoint }} : {{st.rollingAverage}}</p>
+      <loader v-if="dataLoading"></loader>
+
+      <div id="chart-container" v-if="!dataLoading">
+        <chart :chart-data="stateChartData"></chart>
       </div>
     </div>
-    -->
+
+    <p>This site is meant to show the differences in cases in each state based on daily cases, normalized to each state's largest single day of cases, on a 7-day rolling average.</p>
+
 
   </div>
 </template>
@@ -30,6 +27,11 @@
     font-size:24pt;
   }
 
+  p {
+    width:60%;
+    margin:36px auto;
+  }
+
   button {
     border:1px solid grey;
     padding:4px 8px;
@@ -37,28 +39,17 @@
     cursor:pointer;
   }
 
-  #state-grid {
-    margin:24px auto;
-    width:60vw;
-    display:grid;
-    gap:4px;
-    grid-template-columns:repeat(13, 1fr);
-
-
-   button {
-      width:36px;
-      grid-column:auto / auto;
-      grid-row:auto / auto;
-
-      &.selected {
-        background-color:#CEA3A3;
-      }
-    }
+  #chart-container {
+    width:80%;
+    min-height:400px;
+    margin:0px auto;
   }
 
 </style>
 
 <script>
+import ChartButtons from '@/components/ChartButtons'
+import Loader from '@/components/Loader.vue'
 import Chart from '@/components/Chart.vue'
 
 
@@ -66,16 +57,17 @@ export default {
   name: 'Home',
 
   components: {
-    Chart
+    ChartButtons, Loader, Chart
   },
 
   props:['statestring'],
 
   data: () => ({
+    dataLoading:false,
     allCovidData: {},
     stateChartData: [],
-    //TODO: y field (could be switchable)
     states: ['AK', 'AL', 'AR', 'AS', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'GU', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MP', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UM', 'UT', 'VA', 'VI', 'VT', 'WA', 'WI', 'WV', 'WY'],
+    statesForURL:[],
     selectedStates: [],
     stateMetaData: {},
     rollingAvgSize: 7
@@ -83,8 +75,7 @@ export default {
 
   methods: {
     getCovidData() {
-
-      //TODO: build cache - > 4MB?
+      this.dataLoading = true
 
       fetch('https://covidtracking.com/api/v1/states/daily.json')
         .then(response => response.json())
@@ -113,7 +104,9 @@ export default {
       //reverse b/c COVID-19 Tracker data is chornologically backwards
       for (let d=dataLength-1; d>=0; d--) {
         let cd = data[d]
-        stateNormedData[cd.state].push(cd)
+        if (cd.date > 20200301) {
+          stateNormedData[cd.state].push(cd)
+        }
       }
 
       //make high points
@@ -135,10 +128,9 @@ export default {
       }
 
 
-
       let rollingAvgSize = this.rollingAvgSize
 
-      // make high point percents, rolling averages, date ms
+      // normalize and format state-level data
       for (let state in stateNormedData) {
         let theStateData = stateNormedData[state]
         let theStateDataLength = theStateData.length
@@ -152,19 +144,19 @@ export default {
           let currentData = theStateData[hp]
           let posIncrease = currentData.positiveIncrease
           
-          //TODO - offload calculations to when we build the graph data?
-
           //normalize
           let percHighPoint = Math.round((posIncrease / stateMeta.highPoint) * 100)
           currentData.percentOfHighPoint = percHighPoint
         
-          //rolling avg
+          /*
+          //raw rolling avg
           avgBuffer.push(posIncrease)
           if (avgBuffer.length > rollingAvgSize) {
             avgBuffer.shift()
           }
           let sumBuffer = avgBuffer.reduce((acc, cur) => acc + cur)
           currentData.rollingAverage = Math.round(sumBuffer / rollingAvgSize)
+          */
 
           //normalized avg
           normAvgBuffer.push(percHighPoint)
@@ -175,7 +167,6 @@ export default {
           currentData.normRollingAverage = Math.round(normSumBuffer / rollingAvgSize)
 
           //date
-          //var txt2 = txt1.slice(0, 3) + "bar" + txt1.slice(3);
           let curDateString = currentData.date.toString()
           let curDateFormatted = curDateString.slice(0,4) + "-" + curDateString.slice(4,6) + "-" + curDateString.slice(6,8)
           //TODO: improve this - gotta be super slow
@@ -191,16 +182,13 @@ export default {
         this.makeChartData()
       }
 
+      this.dataLoading = false
+
     },
 
 
     makeChartData() {
-
-      console.log("MAKE CHART DATA")
-
       let localStateChartData = []
-
-      //TODO - dynamically handle yField changes etc
 
       this.selectedStates.map(state => {
         let stateSeriesObj = {}
@@ -212,7 +200,6 @@ export default {
 
         let stateCovidData = this.allCovidData[state]
 
-        //TODO: sort stateCovidData by date?
 
         let stateCovidDataLength = stateCovidData.length
         for (let sd=0; sd<stateCovidDataLength; sd++) {
@@ -228,41 +215,57 @@ export default {
     },
 
 
-    toggleSelectState(state) {
-      let stateIndex = this.selectedStates.indexOf(state)
-      if (stateIndex == -1) {
-        this.selectedStates.push(state)
-      } else {
-        this.selectedStates.splice(stateIndex, 1)
-      }
+    // toggleSelectState(state) {
+    //   let stateIndex = this.statesForURL.indexOf(state)
+    //   if (stateIndex == -1) {
+    //     this.statesForURL.push(state)
+    //   } else {
+    //     this.statesForURL.splice(stateIndex, 1)
+    //   }
 
-      let newParam = this.selectedStates.join('|')
+    //   this.updateURL()
 
-      this.$router.push({path: `/${newParam}`})
+    //   if (this.allCovidData.populated){
+    //     this.makeChartData()
+    //   }
 
-      console.log()
-      if (this.allCovidData.populated){
-        this.makeChartData()
-      }
+    // },
 
-    },
+    // isStateSelected(state) {
+    //   return (this.selectedStates.indexOf(state) >= 0)
+    // },
 
-    isStateSelected(state) {
-      return (this.selectedStates.indexOf(state) >= 0)
-    },
-
-    setSelectedStates() {
+    setInitialStates() {
       this.selectedStates = (this.statestring) ? this.statestring.split('|') : []
       if (this.allCovidData.populated){
         this.makeChartData()
       }
-    }
+    },
 
+    // clearSelections() {
+    //   this.statesForURL = []
+    //   this.updateURL()
+    // },
+
+    // selectAllStates() {
+    //   this.statesForURL = this.states
+    //   this.updateURL()
+    // },
+
+    // updateURL() {
+    //   let newParam = this.statesForURL.join('|')
+    //   this.$router.push({path: `/${newParam}`})
+    // }
 
   },
 
   watch: {
-
+    statestring: function() {
+      this.selectedStates = (this.statestring) ? this.statestring.split('|') : []
+      if (this.allCovidData.populated) {
+        this.makeChartData()
+      }
+    }
   },
 
   computed: {
@@ -270,12 +273,11 @@ export default {
   },
 
   created() {
-
+    this.setInitialStates()
   },
 
   mounted() {
-    this.setSelectedStates()
-    console.log("mounted home")
+    
   }
 }
 </script>

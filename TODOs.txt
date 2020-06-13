@@ -1,0 +1,35 @@
+
+
+
+ - Cache data in localhost with date
+ 
+ - Ignore extraneous data in URL hash
+
+
+
+ - Header
+
+ - Footer
+
+ - Regions buttons
+
+ - Improve loader
+
+ - Geolocate first state?
+
+ - Button style improvements
+
+ - Graph settings
+
+ - Social graph tags / images
+
+
+ - Page fonts / colors?
+
+ - Mobile
+
+
+
+ - NYT Data instead? (would have to calculate individual values by state)
+   - https://corona.lmao.ninja/v2/nyt/states
+   - or build proxy to curl directly from the NYT and preprocess individual date data
