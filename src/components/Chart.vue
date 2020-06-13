@@ -1,12 +1,29 @@
 <template>
-  <div id="chart">
-    
+  <div id="chart-container">
+    <h3 v-if="!chartData.length" class="header-select-states">Select some States!</h3>
+    <div id="chart">
+      
 
 
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+
+  #chart-container {
+    position:relative;
+  
+    .header-select-states {
+      text-align:center;
+      position:absolute;
+      z-index:9999;
+      width:100%;
+      top:48px;
+      left:0;
+    }
+
+  }
 
 </style>
 

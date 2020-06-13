@@ -1,17 +1,13 @@
 
 
- - Regions buttons
-
 
 
 
  - Header
 
+ - About
+
  - Footer
-
- - No data selected
-
- - Improve loader
 
  - Social graph tags / images
 
