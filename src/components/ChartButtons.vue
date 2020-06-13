@@ -14,12 +14,7 @@
 </template>
 
 <style scoped lang="scss">
-  button {
-    border:1px solid grey;
-    padding:4px 8px;
-    border-radius:4px;
-    cursor:pointer;
-  }
+
 
   #state-grid {
     margin:24px auto;

@@ -31,12 +31,6 @@
     margin:36px auto;
   }
 
-  button {
-    border:1px solid grey;
-    padding:4px 8px;
-    border-radius:4px;
-    cursor:pointer;
-  }
 
   #chart-container {
     width:80%;
@@ -193,9 +187,7 @@ export default {
         let stateSeriesObj = {}
         stateSeriesObj.name = state
         stateSeriesObj.type = 'line'
-        stateSeriesObj.marker = {enabled:false}
         stateSeriesObj.data = []
-        // stateSeriesObj.color = this.stateMetaData.color
 
         let stateCovidData = this.allCovidData[state]
 

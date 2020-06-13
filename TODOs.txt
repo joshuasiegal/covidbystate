@@ -15,8 +15,6 @@
 
  - Improve loader
 
- - Geolocate first state?
-
  - Button style improvements
 
  - Graph settings
@@ -29,6 +27,8 @@
  - Mobile
 
  - Deploy shiz
+
+ - Update readme
 
 
 
