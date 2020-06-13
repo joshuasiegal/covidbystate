@@ -78,16 +78,16 @@ export default {
   data: () => ({
     statesForURL: [],
     regionStrings: {
-      pacific: 'WA|OR|CA|HI|AK', 
-      west: 'NV|ID|MT|WY|CO|UT',
-      southwest: 'AZ|NM|TX|OK',
-      plains: 'ND|SD|NE|KS|IA|MO',
-      midwest: 'MN|WI|IL|MI|IN|OH',
-      south: 'AR|LA|MS|TN|KY|AL',
-      southeast: 'GA|FL|NC|SC|VA|WV',
-      newengland: 'ME|VT|NH|MA|RI|CT',
-      northeast: 'NY|PA|DC|NJ|DE|MD',
-      territories: 'GU|MP|PR|UM|AS|VI',
+      pacific: ['WA','OR','CA','HI','AK'], 
+      west: ['NV','ID','MT','WY','CO','UT'],
+      southwest: ['AZ','NM','TX','OK'],
+      plains: ['ND','SD','NE','KS','IA','MO'],
+      midwest: ['MN','WI','IL','MI','IN','OH'],
+      south: ['AR','LA','MS','TN','KY','AL'],
+      southeast: ['GA','FL','NC','SC','VA','WV'],
+      newengland: ['ME','VT','NH','MA','RI','CT'],
+      northeast: ['NY','PA','DC','NJ','DE','MD'],
+      territories: ['GU','MP','PR','UM','AS','VI'],
     }
   }),
 
@@ -117,8 +117,8 @@ export default {
       this.updateURL()
     },
 
-    updateURL(param) {
-      let paramString = (param) ? param : this.statesForURL.join('|')
+    updateURL() {
+      let paramString = this.statesForURL.join('|')
       this.$router.push({path: `/${paramString}`})
     },
 
@@ -127,7 +127,8 @@ export default {
     },
 
     selectRegion(region) {
-      this.updateURL(this.regionStrings[region])
+      this.statesForURL = [...this.regionStrings[region]]
+      this.updateURL()
     }
 
   },

@@ -11,8 +11,8 @@
 
  - Social graph tags / images
 
+ - SEO / Meta tags
 
- - Page fonts / colors?
 
  - Mobile
 
