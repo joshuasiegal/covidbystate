@@ -79,7 +79,7 @@ export default {
   },
 
   watch: {
-    //better as a computed, or will Highcharts not respond to that
+    //better as a computed, or will Highcharts not respond to that?
     chartData: function() {
       this.createChart()
     }

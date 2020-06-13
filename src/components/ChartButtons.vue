@@ -5,8 +5,18 @@
       <button v-for="state in states" :class="{'selected':(isStateSelected(state))}" @click="toggleSelectState(state)">{{state}}</button>
     </div>
     <div id="conv-grid">
-      <button @click="clearSelections" class="button-clear-selections">Clear Selections</button>
-      <button @click="selectAllStates" class="button-select-all">Select All States</button>
+      <button @click="clearSelections" class="button-clear-selections button-pill button-pill-left">Clear Selections</button>
+      <button @click="selectRegion('pacific')" class="button-select-west button-pill">Pacific</button>
+      <button @click="selectRegion('west')" class="button-select-west button-pill">West</button>
+      <button @click="selectRegion('southwest')" class="button-select-southwest button-pill">Southwest</button>
+      <button @click="selectRegion('plains')" class="button-select-southwest button-pill">Plains</button>
+      <button @click="selectRegion('midwest')" class="button-select-midwest button-pill">Midwest</button>
+      <button @click="selectRegion('south')" class="button-select-west button-pill">South</button>
+      <button @click="selectRegion('southeast')" class="button-select-west button-pill">Southeast</button>
+      <button @click="selectRegion('newengland')" class="button-select-west button-pill">New England</button>
+      <button @click="selectRegion('northeast')" class="button-select-west button-pill">NorthEast</button>
+      <button @click="selectRegion('territories')" class="button-select-west button-pill">Territories</button>
+      <button @click="selectAllStates" class="button-select-all button-pill button-pill-right">Select All States</button>
     </div>
 
 
@@ -14,7 +24,6 @@
 </template>
 
 <style scoped lang="scss">
-
 
   #state-grid {
     margin:24px auto;
@@ -34,6 +43,23 @@
       }
     }
   }
+
+  #conv-grid {
+    margin-bottom:24px;
+
+    .button-pill {
+      border-radius:0;
+
+      &.button-pill-left {
+        border-radius:4px 0 0 4px;
+      }
+
+      &.button-pill-right {
+        border-radius:0 4px 4px 0;
+      }
+    }
+  }
+
 </style>
 
 <script>
@@ -50,7 +76,19 @@ export default {
   props:['selectedStates', 'states'],
 
   data: () => ({
-    statesForURL: []
+    statesForURL: [],
+    regionStrings: {
+      pacific: 'WA|OR|CA|HI|AK', 
+      west: 'NV|ID|MT|WY|CO|UT',
+      southwest: 'AZ|NM|TX|OK',
+      plains: 'ND|SD|NE|KS|IA|MO',
+      midwest: 'MN|WI|IL|MI|IN|OH',
+      south: 'AR|LA|MS|TN|KY|AL',
+      southeast: 'GA|FL|NC|SC|VA|WV',
+      newengland: 'ME|VT|NH|MA|RI|CT',
+      northeast: 'NY|PA|DC|NJ|DE|MD',
+      territories: 'GU|MP|PR|UM|AS|VI',
+    }
   }),
 
   methods: {
@@ -79,13 +117,17 @@ export default {
       this.updateURL()
     },
 
-    updateURL() {
-      let newParam = this.statesForURL.join('|')
-      this.$router.push({path: `/${newParam}`})
+    updateURL(param) {
+      let paramString = (param) ? param : this.statesForURL.join('|')
+      this.$router.push({path: `/${paramString}`})
     },
 
     setStates() {
       this.statesForURL = this.selectedStates
+    },
+
+    selectRegion(region) {
+      this.updateURL(this.regionStrings[region])
     }
 
   },

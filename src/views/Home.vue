@@ -2,7 +2,7 @@
   <div id="home">
     <h2>Compare Covid By State</h2>
 
-    <button @click="getCovidData">TEST GET DATA</button>
+    <!-- <button @click="getCovidData">TEST GET DATA</button> -->
 
     <div>
       <chart-buttons :selected-states="selectedStates" :states="states"></chart-buttons>
@@ -67,20 +67,67 @@ export default {
   }),
 
   methods: {
+
     getCovidData() {
+      const cacheDate = parseInt(localStorage.getItem('cacheDate'),10) || 0
+      const curDate = parseInt(this.getCurrentDateString())
+      if (curDate > cacheDate) {
+        this.fetchCovidData()
+      } else {
+        this.getCovidCache()
+      }
+    },
+
+    getCovidCache() {
+      const rawCache = localStorage.getItem('covidCache')
+      if (!rawCache) {
+        this.fetchCovidData()
+        return
+      }
+
+      const cache = JSON.parse(rawCache)
+
+      this.normalizeDataByState(cache)
+    },
+
+    setCovidCache(covidData) {
+      try {
+        localStorage.setItem('covidCache', JSON.stringify(covidData))
+      } catch(e) {
+        console.error(e)
+        return
+      }
+
+      const curDate = this.getCurrentDateString()
+      localStorage.setItem('cacheDate', curDate)
+    },
+
+    fetchCovidData() {
       this.dataLoading = true
 
       fetch('https://covidtracking.com/api/v1/states/daily.json')
         .then(response => response.json())
         .then(data => {
+
+          this.setCovidCache(data)
+
           this.normalizeDataByState(data)
         })
+    },
+
+    getCurrentDateString() {
+      const curDateObj = new Date()
+      const year = curDateObj.getFullYear().toString()
+      let month = curDateObj.getMonth() + 1
+      month = (month < 10) ? '0' + month : month.toString()
+      let date = curDateObj.getDate()
+      date = (date < 10) ? '0' + date : date.toString()
+      return year + month + date
     },
 
     normalizeDataByState(data) {
 
       let stateNormedData = {};
-
 
       //prefill stateNormedData and stateMetaData for states
       this.states.map(state => {
@@ -171,12 +218,17 @@ export default {
       this.allCovidData = stateNormedData
       this.allCovidData.populated = true
 
+      this.covidDataReady()
+
+    },
+
+
+    covidDataReady() {
       if (this.selectedStates.length) {
         this.makeChartData()
       }
 
       this.dataLoading = false
-
     },
 
 
@@ -184,13 +236,13 @@ export default {
       let localStateChartData = []
 
       this.selectedStates.map(state => {
+        let stateCovidData = this.allCovidData[state]
+        if (!stateCovidData) { return }
+
         let stateSeriesObj = {}
         stateSeriesObj.name = state
         stateSeriesObj.type = 'line'
         stateSeriesObj.data = []
-
-        let stateCovidData = this.allCovidData[state]
-
 
         let stateCovidDataLength = stateCovidData.length
         for (let sd=0; sd<stateCovidDataLength; sd++) {
@@ -230,6 +282,7 @@ export default {
 
   created() {
     this.setInitialStates()
+    this.getCovidData()
   },
 
   mounted() {

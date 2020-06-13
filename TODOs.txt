@@ -1,9 +1,7 @@
 
 
+ - Regions buttons
 
- - Cache data in localhost with date
-
- - Ignore extraneous data in URL hash
 
 
 
@@ -11,13 +9,9 @@
 
  - Footer
 
- - Regions buttons
+ - No data selected
 
  - Improve loader
-
- - Button style improvements
-
- - Graph settings
 
  - Social graph tags / images
 
