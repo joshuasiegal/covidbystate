@@ -69,6 +69,9 @@
     }
   }
 
+  button:focus { outline:0; }
+  select:focus { outline:0; }
+
 
   #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;

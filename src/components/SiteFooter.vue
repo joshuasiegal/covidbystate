@@ -22,6 +22,7 @@
     display:flex;
     height:40px;
     width:100vw;
+    padding-top:36px;
 
     div {
       padding:8px;
