@@ -175,7 +175,7 @@ export default {
     },
 
     updateURL() {
-      let paramString = this.statesForURL.join('|')
+      let paramString = this.statesForURL.join('-')
       this.$router.push({path: `/${paramString}`})
     },
 
