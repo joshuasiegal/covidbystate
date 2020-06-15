@@ -268,10 +268,8 @@ export default {
 
 
     setInitialStates() {
-      const depipedStateString = this.statestring.replace(/\|/g,'-')
-      console.log(depipedStateString)
+      const depipedStateString = (this.statestring) ? this.statestring.replace(/\|/g,'-') : ''
       this.selectedStates = (depipedStateString) ? depipedStateString.split('-') : []
-      console.log(this.selectedStates)
       if (this.allCovidData.populated){
         this.makeChartData()
       }
@@ -281,7 +279,7 @@ export default {
 
   watch: {
     statestring: function() {
-      const depipedStateString = this.statestring.replace(/\|/g,'-')
+      const depipedStateString = (this.statestring) ? this.statestring.replace(/\|/g,'-') : ''
       this.selectedStates = (depipedStateString) ? depipedStateString.split('-') : []
       if (this.allCovidData.populated) {
         this.makeChartData()
