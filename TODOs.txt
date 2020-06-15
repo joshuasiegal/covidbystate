@@ -5,8 +5,6 @@
 
 
 
- - Social graph tags / images
-
  - Social share - top right
 
  - SEO / Meta tags

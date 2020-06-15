@@ -2,6 +2,9 @@
   <div id="home">
     <site-header></site-header>
 
+    <!-- for seo -->
+    <h1 style="display:none;">Compare Covid By State</h1>
+    
     <h2>Compare Covid By State</h2>
 
     <div>
