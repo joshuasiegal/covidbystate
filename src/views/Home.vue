@@ -1,8 +1,8 @@
 <template>
   <div id="home">
-    <h2>Compare Covid By State</h2>
+    <site-header></site-header>
 
-    <!-- <button @click="getCovidData">TEST GET DATA</button> -->
+    <h2>Compare Covid By State</h2>
 
     <div>
       <chart-buttons :selected-states="selectedStates" :states="states"></chart-buttons>
@@ -14,9 +14,9 @@
       </div>
     </div>
 
-    <p>This site shows the trajectory in daily cases in each state, normalized to each state's largest single day of cases, on a 7-day rolling average.</p>
+    <info></info>
 
-
+    <site-footer></site-footer>
   </div>
 </template>
 
@@ -26,31 +26,37 @@
     font-size:24pt;
   }
 
-  p {
-    width:60%;
-    margin:36px auto;
-  }
-
-
   #chart-container {
     width:80%;
     min-height:400px;
     margin:0px auto;
   }
 
+  @media (min-width: 320px) and (max-width: 1000px) {
+    h2 {
+      font-size:20pt;
+    }
+
+    #chart-container {
+      width:96%;
+    }
+  }
+
 </style>
 
 <script>
+import SiteHeader from '@/components/SiteHeader'
 import ChartButtons from '@/components/ChartButtons'
-import Loader from '@/components/Loader.vue'
-import Chart from '@/components/Chart.vue'
-
+import Loader from '@/components/Loader'
+import Chart from '@/components/Chart'
+import Info from '@/components/Info'
+import SiteFooter from '@/components/SiteFooter'
 
 export default {
   name: 'Home',
 
   components: {
-    ChartButtons, Loader, Chart
+    SiteHeader, ChartButtons, Loader, Chart, Info, SiteFooter
   },
 
   props:['statestring'],
@@ -272,6 +278,8 @@ export default {
       this.selectedStates = (this.statestring) ? this.statestring.split('|') : []
       if (this.allCovidData.populated) {
         this.makeChartData()
+      } else {
+        this.getCovidData()
       }
     }
   },

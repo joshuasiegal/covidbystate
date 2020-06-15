@@ -4,6 +4,7 @@
     <div id="state-grid">
       <button v-for="state in states" :class="{'selected':(isStateSelected(state))}" @click="toggleSelectState(state)">{{state}}</button>
     </div>
+
     <div id="conv-grid">
       <button @click="clearSelections" class="button-clear-selections button-pill button-pill-left">Clear Selections</button>
       <button @click="selectRegion('pacific')" class="button-select-west button-pill">Pacific</button>
@@ -19,6 +20,22 @@
       <button @click="selectAllStates" class="button-select-all button-pill button-pill-right">Select All States</button>
     </div>
 
+    <div id="conv-select-cont">
+      <select id="conv-select" v-model="selectedRegion">
+        <option value="">Select a Region...</option>
+        <option value="pacific">Pacific</option>
+        <option value="west">West</option>
+        <option value="southwest">Southwest</option>
+        <option value="plains">Plains</option>
+        <option value="midwest">Midwest</option>
+        <option value="south">South</option>
+        <option value="southeast">Southeast</option>
+        <option value="newengland">New England</option>
+        <option value="northeast">Northeast</option>
+        <option value="territories">Territories</option>
+      </select>
+    </div>
+
 
   </div>
 </template>
@@ -31,10 +48,11 @@
     display:grid;
     gap:4px;
     grid-template-columns:repeat(13, 1fr);
+    justify-items:stretch;
 
 
    button {
-      width:36px;
+      width:auto;
       grid-column:auto / auto;
       grid-row:auto / auto;
 
@@ -45,10 +63,10 @@
   }
 
   #conv-grid {
-    margin-bottom:24px;
-
     .button-pill {
       border-radius:0;
+      padding:8px;
+      margin-bottom:24px;
 
       &.button-pill-left {
         border-radius:4px 0 0 4px;
@@ -59,6 +77,43 @@
       }
     }
   }
+
+  #conv-select-cont {
+    display:none;
+  }
+
+
+  @media (min-width: 320px) and (max-width: 1000px) {
+    
+    #state-grid {
+      width:96vw;
+      grid-template-columns:repeat(6, 1fr);
+      gap:8px;
+
+      button {
+        width:auto;  
+        padding:8px 0px;
+      }
+    }
+
+    .button-pill {
+      display:none;
+    }
+
+    .button-pill-left,
+    .button-pill-right {
+      padding:12px;
+      display:inline;
+    }
+
+    #conv-select-cont {
+      display:block;
+      margin-bottom:24px;
+    }
+
+  }
+
+
 
 </style>
 
@@ -77,6 +132,7 @@ export default {
 
   data: () => ({
     statesForURL: [],
+    selectedRegion:'',
     regionStrings: {
       pacific: ['WA','OR','CA','HI','AK'], 
       west: ['NV','ID','MT','WY','CO','UT'],
@@ -100,6 +156,7 @@ export default {
         this.statesForURL.splice(stateIndex, 1)
       }
 
+      this.selectedRegion = ''
       this.updateURL()
     },
 
@@ -134,7 +191,11 @@ export default {
   },
 
   watch: {
-
+    selectedRegion: function(region) {
+      if (region) {
+        this.selectRegion(region)
+      }
+    }
   },
 
   computed: {

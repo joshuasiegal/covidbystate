@@ -1,5 +1,5 @@
 <template>
-  <div id="chart-container">
+  <div id="chart-bounds">
     <h3 v-if="!chartData.length" class="header-select-states">Select some States!</h3>
     <div id="chart">
       
@@ -11,8 +11,9 @@
 
 <style scoped lang="scss">
 
-  #chart-container {
+  #chart-bounds {
     position:relative;
+    width:100%;
   
     .header-select-states {
       text-align:center;

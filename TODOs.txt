@@ -3,25 +3,23 @@
 
 
 
- - Header
 
- - About
-
- - Footer
 
  - Social graph tags / images
 
  - SEO / Meta tags
 
-
- - Mobile
+ - Favicon
 
  - Deploy shiz
 
  - Update readme
 
+ - Future proof with 
+
 
 
  - NYT Data instead? (would have to calculate individual values by state)
+   - https://github.com/nytimes/covid-19-data/blob/master/us-states.csv
    - https://corona.lmao.ninja/v2/nyt/states
    - or build proxy to curl directly from the NYT and preprocess individual date data
