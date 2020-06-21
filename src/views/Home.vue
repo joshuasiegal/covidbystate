@@ -100,6 +100,10 @@ export default {
     },
 
     setCovidCache(covidData) {
+
+      localStorage.setItem('covidCache', '')
+      localStorage.setItem('cacheDate', '')
+
       try {
         localStorage.setItem('covidCache', JSON.stringify(covidData))
       } catch(e) {
