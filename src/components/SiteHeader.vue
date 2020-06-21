@@ -2,7 +2,7 @@
   <div id="header">
 
     <div id="header-left">
-      &nbsp;
+      <a href="https://twitter.com/joshuasiegal?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-screen-name="false" data-show-count="false"></a>
     </div>
 
     <div id="header-middle">
@@ -10,7 +10,8 @@
     </div>
 
     <div id="header-right">
-      <a href="https://twitter.com/joshuasiegal?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-screen-name="false" data-show-count="false"></a>
+      <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fcovidbystate.org&layout=button&size=small&width=67&height=20" width="67" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+      &nbsp;<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a>
     </div>
 
   </div>
@@ -29,6 +30,7 @@
 
       &#header-left {
         text-align:left;
+        opacity:0.4;
       }
 
       &#header-middle {
@@ -37,7 +39,7 @@
 
       &#header-right {
         text-align:right;
-        opacity:0.4; /* for twitter button iframe */
+        opacity:0.4;
       }
     }
 
