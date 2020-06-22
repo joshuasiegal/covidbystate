@@ -45,6 +45,23 @@
 
   }
 
+  @media (min-width: 320px) and (max-width: 1000px) {
+
+    #header {
+      height:48px;
+    }
+
+    #header div {
+      flex:45%;
+    }
+
+    #header div#header-middle {
+      flex:10%;
+    }
+
+  }
+
+
 
 </style>
 
