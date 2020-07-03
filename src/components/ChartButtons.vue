@@ -5,9 +5,8 @@
       <button v-for="state in states" :class="{'selected':(isStateSelected(state))}" @click="toggleSelectState(state)">{{state}}</button>
     </div>
 
-    <div id="conv-grid">
-      <button @click="clearSelections" class="button-clear-selections button-pill button-pill-left">Clear Selections</button>
-      <button @click="selectRegion('pacific')" class="button-select-west button-pill">Pacific</button>
+    <div id="conv-regions">
+      <button @click="selectRegion('pacific')" class="button-select-west button-pill button-pill-left">Pacific</button>
       <button @click="selectRegion('west')" class="button-select-west button-pill">West</button>
       <button @click="selectRegion('southwest')" class="button-select-southwest button-pill">Southwest</button>
       <button @click="selectRegion('plains')" class="button-select-southwest button-pill">Plains</button>
@@ -16,7 +15,12 @@
       <button @click="selectRegion('southeast')" class="button-select-west button-pill">Southeast</button>
       <button @click="selectRegion('newengland')" class="button-select-west button-pill">New England</button>
       <button @click="selectRegion('northeast')" class="button-select-west button-pill">NorthEast</button>
-      <button @click="selectRegion('territories')" class="button-select-west button-pill">Territories</button>
+      <button @click="selectRegion('territories')" class="button-select-west button-pill button-pill-right">Territories</button>
+    </div>
+
+    <div id="conv-settings">
+      <button @click="clearSelections" class="button-clear-selections button-pill button-pill-left">Clear Selections</button>
+      <button @click="setDefaultStates" class="button-clear-selections button-pill">Set As Default</button>
       <button @click="selectAllStates" class="button-select-all button-pill button-pill-right">Select All States</button>
     </div>
 
@@ -44,10 +48,10 @@
 
   #state-grid {
     margin:24px auto;
-    width:60vw;
+    width:72vw;
     display:grid;
     gap:4px;
-    grid-template-columns:repeat(13, 1fr);
+    grid-template-columns:repeat(15, 1fr);
     justify-items:stretch;
 
 
@@ -62,7 +66,8 @@
     }
   }
 
-  #conv-grid {
+  #conv-regions,
+  #conv-settings {
     .button-pill {
       border-radius:0;
       padding:8px;
@@ -96,15 +101,15 @@
       }
     }
 
-    .button-pill {
+    #conv-regions {
       display:none;
     }
 
-    .button-pill-left,
+/*    .button-pill-left,
     .button-pill-right {
       padding:12px;
       display:inline;
-    }
+    }*/
 
     #conv-select-cont {
       display:block;
@@ -160,6 +165,10 @@ export default {
       this.updateURL()
     },
 
+    setDefaultStates() {
+      localStorage.setItem('defaultStates',this.selectedStates.join('-'))
+    },
+
     isStateSelected(state) {
       return (this.selectedStates.indexOf(state) >= 0)
     },
@@ -180,7 +189,13 @@ export default {
     },
 
     setStates() {
-      this.statesForURL = this.selectedStates
+      const defaultStateString = localStorage.getItem('defaultStates')
+      const defaultStates = (defaultStateString) ? defaultStateString.split('-') : []
+      this.statesForURL = (this.selectedStates.length) ? this.selectedStates : defaultStates
+      
+      if (defaultStateString && !this.selectedStates.length) {
+        this.updateURL()
+      }
     },
 
     selectRegion(region) {

@@ -72,7 +72,6 @@ export default {
     allCovidData: {},
     stateChartData: [],
     states: ['AK', 'AL', 'AR', 'AS', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'GU', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MP', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UM', 'UT', 'VA', 'VI', 'VT', 'WA', 'WI', 'WV', 'WY'],
-    statesForURL:[],
     selectedStates: [],
     stateMetaData: {},
     rollingAvgSize: 7
@@ -81,6 +80,9 @@ export default {
   methods: {
 
     getCovidData() {
+      /*
+      //covid data response is now > 5MB, so too large for localstorage
+      //TODO: find another cache option?
       const cacheDate = parseInt(localStorage.getItem('cacheDate'),10) || 0
       const curDate = parseInt(this.getCurrentDateString())
       if (curDate > cacheDate) {
@@ -88,8 +90,13 @@ export default {
       } else {
         this.getCovidCache()
       }
+      */
+
+      this.fetchCovidData()
     },
 
+    /*
+    //see above method - API data is now too large to cache in localStorage
     getCovidCache() {
       const rawCache = localStorage.getItem('covidCache')
       if (!rawCache) {
@@ -101,7 +108,10 @@ export default {
 
       this.normalizeDataByState(cache)
     },
+    */
 
+    /*
+    //see above method - API data is now too large to cache in localStorage
     setCovidCache(covidData) {
 
       localStorage.setItem('covidCache', '')
@@ -117,6 +127,7 @@ export default {
       const curDate = this.getCurrentDateString()
       localStorage.setItem('cacheDate', curDate)
     },
+    */
 
     fetchCovidData() {
       this.dataLoading = true
@@ -125,12 +136,15 @@ export default {
         .then(response => response.json())
         .then(data => {
 
-          this.setCovidCache(data)
+          // see above - covid API response data is now too large for localStorage
+          //this.setCovidCache(data)
 
           this.normalizeDataByState(data)
         })
     },
 
+    /*
+    //see above method - API data is now too large to cache in localStorage
     getCurrentDateString() {
       const curDateObj = new Date()
       const year = curDateObj.getFullYear().toString()
@@ -140,6 +154,7 @@ export default {
       date = (date < 10) ? '0' + date : date.toString()
       return year + month + date
     },
+    */
 
     normalizeDataByState(data) {
 
@@ -275,8 +290,7 @@ export default {
 
 
     setInitialStates() {
-      const depipedStateString = (this.statestring) ? this.statestring.replace(/\|/g,'-') : ''
-      this.selectedStates = (depipedStateString) ? depipedStateString.split('-') : []
+      this.selectedStates = (this.statestring) ? this.statestring.split('-') : []
       if (this.allCovidData.populated){
         this.makeChartData()
       }
@@ -286,8 +300,7 @@ export default {
 
   watch: {
     statestring: function() {
-      const depipedStateString = (this.statestring) ? this.statestring.replace(/\|/g,'-') : ''
-      this.selectedStates = (depipedStateString) ? depipedStateString.split('-') : []
+      this.selectedStates = (this.statestring) ? this.statestring.split('-') : []
       if (this.allCovidData.populated) {
         this.makeChartData()
       } else {
