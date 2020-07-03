@@ -44,6 +44,11 @@
     cursor:pointer;
     box-shadow:0px 1px 1px 1px #DEDEDE;
     background-color:#F0F0F0;
+
+    &.disabled {
+      color:#919191;
+      cursor:not-allowed;
+    }
   }
 
   select {
@@ -71,6 +76,21 @@
 
   button:focus { outline:0; }
   select:focus { outline:0; }
+
+  @keyframes fadeInAndRiseOut {
+    0% {
+      opacity: 0;
+      top:0px;
+    }
+    50% {
+      opacity: 0.7;
+      top:-20px;
+    }
+    100% {
+      opacity: 0;
+      top:-40px;
+    }
+  }
 
 
   #app {

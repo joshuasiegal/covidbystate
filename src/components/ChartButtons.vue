@@ -20,7 +20,7 @@
 
     <div id="conv-settings">
       <button @click="clearSelections" class="button-clear-selections button-pill button-pill-left">Clear Selections</button>
-      <button @click="setDefaultStates" class="button-clear-selections button-pill">Set As Default</button>
+      <button @click="setDefaultStates" :class="{'disabled':!selectedStates.length}" class="button-clear-selections button-pill">Set As Default<span class="verification verification-default-states" :class="{'active':defaultStatesSet}">You're Set!</span></button>
       <button @click="selectAllStates" class="button-select-all button-pill button-pill-right">Select All States</button>
     </div>
 
@@ -66,12 +66,37 @@
     }
   }
 
+  .verification {
+    background-color:#3366CC;
+    color:#F0F0F0;
+    position:absolute;
+    z-index:999;
+    display:block;
+    padding:3px 6px;
+    top:0px;
+    width:100%;
+    display:none;
+    border-radius:2px;
+
+    &.active {
+      display:block;
+      animation:fadeInAndRiseOut 1.5s ease-out forwards;
+    }
+
+    &.verification-default-states {
+      left:0px;
+    }
+  }
+
   #conv-regions,
   #conv-settings {
+
     .button-pill {
       border-radius:0;
       padding:8px;
       margin-bottom:24px;
+      position:relative;
+      overflow:visible;
 
       &.button-pill-left {
         border-radius:4px 0 0 4px;
@@ -138,6 +163,7 @@ export default {
   data: () => ({
     statesForURL: [],
     selectedRegion:'',
+    defaultStatesSet:false,
     regionStrings: {
       pacific: ['WA','OR','CA','HI','AK'], 
       west: ['NV','ID','MT','WY','CO','UT'],
@@ -166,7 +192,17 @@ export default {
     },
 
     setDefaultStates() {
-      localStorage.setItem('defaultStates',this.selectedStates.join('-'))
+      if (!this.selectedStates.length) { return }
+      // try {
+        console.log("SET LOCAL DEFAULTS", this.selectedStates.join('-'))
+        localStorage.setItem('defaultStates',this.selectedStates.join('-'))
+        this.defaultStatesSet = true
+        setTimeout(() => {
+          this.defaultStatesSet = false
+        },1500)
+      // } catch(e) {
+      //  console.warn(e)
+      // }
     },
 
     isStateSelected(state) {
