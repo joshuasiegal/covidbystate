@@ -20,7 +20,12 @@
 
     <div id="conv-settings">
       <button @click="clearSelections" class="button-clear-selections button-pill button-pill-left">Clear Selections</button>
-      <button @click="setDefaultStates" :class="{'disabled':!selectedStates.length}" class="button-clear-selections button-pill">Set As Default<span class="verification verification-default-states" :class="{'active':defaultStatesSet}">You're Set!</span></button>
+      <button @click="handleDefaultStates" :class="{'disabled':!selectedStates.length && !defaultStates.length}" class="button-defaults button-pill">
+        <span v-text="(defaultStates.length) ? 'Clear Default' : 'Set As Default' " ></span>
+        <span class="verification verification-default-states" :class="{'active':defaultStatesSet}">You're Set!</span>
+        <span class="verification verification-clear-default-states" :class="{'active':defaultStatesClear}">Cleared!</span>
+      </button>
+      <button @click="showDefault" :class="{'disabled':!defaultStates.length}" class="button-show-default button-pill">Show Default</button>
       <button @click="selectAllStates" class="button-select-all button-pill button-pill-right">Select All States</button>
     </div>
 
@@ -39,7 +44,6 @@
         <option value="territories">Territories</option>
       </select>
     </div>
-
 
   </div>
 </template>
@@ -108,6 +112,10 @@
     }
   }
 
+  #conv-settings .button-pill {
+    width:120px;
+  }
+
   #conv-select-cont {
     display:none;
   }
@@ -163,7 +171,9 @@ export default {
   data: () => ({
     statesForURL: [],
     selectedRegion:'',
+    defaultStates:[],
     defaultStatesSet:false,
+    defaultStatesClear:false,
     regionStrings: {
       pacific: ['WA','OR','CA','HI','AK'], 
       west: ['NV','ID','MT','WY','CO','UT'],
@@ -180,6 +190,7 @@ export default {
 
   methods: {
     toggleSelectState(state) {
+
       let stateIndex = this.statesForURL.indexOf(state)
       if (stateIndex == -1) {
         this.statesForURL.push(state)
@@ -187,22 +198,54 @@ export default {
         this.statesForURL.splice(stateIndex, 1)
       }
 
+
       this.selectedRegion = ''
       this.updateURL()
     },
 
+    handleDefaultStates() {
+      if (!this.selectedStates.length && !this.defaultStates.length) {
+        return
+      }
+
+      if (this.defaultStates.length) {
+        this.clearDefaultStates()
+        return
+      }
+
+      this.setDefaultStates()
+    },
+
     setDefaultStates() {
-      if (!this.selectedStates.length) { return }
-      // try {
-        console.log("SET LOCAL DEFAULTS", this.selectedStates.join('-'))
+      try {
         localStorage.setItem('defaultStates',this.selectedStates.join('-'))
+        this.defaultStates = this.selectedStates
         this.defaultStatesSet = true
         setTimeout(() => {
           this.defaultStatesSet = false
         },1500)
-      // } catch(e) {
-      //  console.warn(e)
-      // }
+      } catch(e) {
+       console.warn(e)
+      }
+    },
+
+    clearDefaultStates() {
+      try {  
+        localStorage.setItem('defaultStates','')
+        this.defaultStates = []
+        this.defaultStatesClear = true
+        setTimeout(() => {
+          this.defaultStatesClear = false
+        },1500)
+      } catch(e) {
+        console.warn(e)
+      }
+    },
+
+    showDefault() {
+      if (!this.defaultStates.length) { return }
+      this.statesForURL = [...this.defaultStates]
+      this.updateURL()
     },
 
     isStateSelected(state) {
@@ -226,9 +269,9 @@ export default {
 
     setStates() {
       const defaultStateString = localStorage.getItem('defaultStates')
-      const defaultStates = (defaultStateString) ? defaultStateString.split('-') : []
-      this.statesForURL = (this.selectedStates.length) ? this.selectedStates : defaultStates
-      
+      this.defaultStates = (defaultStateString) ? defaultStateString.split('-') : []
+      this.statesForURL = (this.selectedStates.length) ? [...this.selectedStates] : [...this.defaultStates]
+
       if (defaultStateString && !this.selectedStates.length) {
         this.updateURL()
       }
