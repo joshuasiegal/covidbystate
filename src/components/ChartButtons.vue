@@ -24,7 +24,7 @@
       <div class="mobile-set">
         <button @click="clearSelections" class="button-clear-selections button-pill">Clear Selections</button>
         <button @click="selectAllStates" class="button-select-all button-pill">Select All States</button>
-        <button @click="copyLink" class="button-copy link button-pill">Copy Link
+        <button @click="copyLink" class="button-copy-link button-pill">Copy Link
           <span class="verification verification-copy link" :class="{'active':linkCopied}">Copied!</span>
         </button>
       </div>
@@ -194,7 +194,7 @@
 
 <script>
 // import SubComponent from '@/components/SubComponent.vue'
-
+import Clipboard from 'clipboard'
 
 export default {
   name: 'ChartButtons',
@@ -327,12 +327,23 @@ export default {
     },
 
     copyLink() {
-      this.linkCopied = true
-      setTimeout(() => {
-        this.linkCopied = false
-      },this.ANIMATION_TIME)
+      const clipb = new Clipboard('.button-copy-link',{
+        text:() => {
+          return window.location.href
+        }
+      })
+      clipb.on('success', () => {
+        this.linkCopied = true
+        setTimeout(() => {
+          this.linkCopied = false
+        },this.ANIMATION_TIME)
+        clipb.destroy()
+      })
+      clipb.on('error', () => {
+        console.warn("Could not copy to clipboard")
+        clipb.destroy()
+      })
     }
-
   },
 
   watch: {

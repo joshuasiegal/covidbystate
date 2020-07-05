@@ -7,6 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "clipboard": "^2.0.6",
     "core-js": "^3.6.5",
     "highcharts": "^8.1.1",
     "vue": "^2.6.11",
