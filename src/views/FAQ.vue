@@ -29,7 +29,7 @@
 
     </div>
               
-    <router-link class="router-link" to="/Home">Home</router-link>
+    <router-link class="router-link" to="/">Home</router-link>
 
     <site-footer></site-footer>
   </div>
