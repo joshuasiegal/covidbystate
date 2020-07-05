@@ -15,7 +15,7 @@
         <button @click="selectRegion('south')" class="button-select-west button-pill">South</button>
         <button @click="selectRegion('southeast')" class="button-select-west button-pill">Southeast</button>
         <button @click="selectRegion('newengland')" class="button-select-west button-pill">New England</button>
-        <button @click="selectRegion('northeast')" class="button-select-west button-pill">NorthEast</button>
+        <button @click="selectRegion('northeast')" class="button-select-west button-pill">Northeast</button>
         <button @click="selectRegion('territories')" class="button-select-west button-pill">Territories</button>
       </div>
     </div>

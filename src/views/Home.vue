@@ -2,11 +2,6 @@
   <div id="home">
     <site-header></site-header>
 
-    <!-- for seo -->
-    <h1 style="display:none;">Compare Covid By State</h1>
-    
-    <h2>Compare Covid By State</h2>
-
     <div>
       <chart-buttons :selected-states="selectedStates" :states="states"></chart-buttons>
 
@@ -21,15 +16,13 @@
 
     <signup></signup>
 
+    <router-link class="router-link" to="/FAQ">FAQ</router-link>
+
     <site-footer></site-footer>
   </div>
 </template>
 
 <style scoped lang="scss">
-
-  h2 {
-    font-size:24pt;
-  }
 
   #chart-container {
     width:80%;
@@ -38,10 +31,6 @@
   }
 
   @media (min-width: 320px) and (max-width: 1000px) {
-    h2 {
-      font-size:20pt;
-    }
-
     #chart-container {
       width:96%;
     }
