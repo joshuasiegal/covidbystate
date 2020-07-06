@@ -21,7 +21,7 @@
           <dd>It doesn’t.  This site is provided as a free resource.  I had trouble finding a visualization of relative coronavirus cases by state, so I made this tool.  I hope it helps people get a picture of how various states are battling coronavirus.</dd>
 
 
-        <dt>How can I help</dt>
+        <dt>How can I help?</dt>
 
           <dd><a href="https://www.forbes.com/sites/morgansimon/2020/04/14/covid-19-giving-guide-how-to-donate-to-reach-the-most-marginalized/#323d96d31a72" target="_blank">Here is an article that details some ways to help.</a><br /><br />Also, you can protect other people by <em>wearing your mask</em>.</dd>
       
