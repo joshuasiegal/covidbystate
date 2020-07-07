@@ -1,6 +1,5 @@
 <template>
   <div id="home">
-    <site-header></site-header>
 
     <div>
       <chart-buttons :selected-states="selectedStates" :states="states"></chart-buttons>
@@ -18,7 +17,6 @@
 
     <router-link class="router-link" to="/FAQ">FAQ</router-link>
 
-    <site-footer></site-footer>
   </div>
 </template>
 
@@ -39,19 +37,17 @@
 </style>
 
 <script>
-import SiteHeader from '@/components/SiteHeader'
 import ChartButtons from '@/components/ChartButtons'
 import Loader from '@/components/Loader'
 import Chart from '@/components/Chart'
 import Info from '@/components/Info'
 import Signup from '@/components/Signup'
-import SiteFooter from '@/components/SiteFooter'
 
 export default {
   name: 'Home',
 
   components: {
-    SiteHeader, ChartButtons, Loader, Chart, Info, Signup, SiteFooter
+    ChartButtons, Loader, Chart, Info, Signup
   },
 
   props:['statestring'],

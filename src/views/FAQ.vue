@@ -1,6 +1,5 @@
 <template>
   <div id="faq">
-    <site-header></site-header>
 
     <div id="faq-cont">
 
@@ -31,7 +30,6 @@
               
     <router-link class="router-link" to="/">Home</router-link>
 
-    <site-footer></site-footer>
   </div>
 </template>
 
@@ -79,15 +77,7 @@
 </style>
 
 <script>
-import SiteHeader from '@/components/SiteHeader'
-import SiteFooter from '@/components/SiteFooter' 
-
 export default {
-  name: 'FAQ',
-
-  components: {
-    SiteHeader, SiteFooter
-  }
-
+  name: 'FAQ'
 }
 </script>

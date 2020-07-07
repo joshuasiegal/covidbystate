@@ -1,6 +1,10 @@
 <template>
   <div id="app">
+    <site-header></site-header>
+
     <router-view/>
+    
+    <site-footer></site-footer>
   </div>
 </template>
 
@@ -100,3 +104,17 @@
   }
 
 </style>
+
+<script>
+import SiteHeader from '@/components/SiteHeader'
+import SiteFooter from '@/components/SiteFooter'
+
+export default {
+  name:'App',
+
+  components: {
+    SiteHeader, SiteFooter
+  }
+
+}
+</script>
