@@ -4,6 +4,14 @@ Compare Covid daily graphs state by state
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/081f0862-d1b6-4033-9590-dfc547645582/deploy-status)](https://app.netlify.com/sites/covidbystate/deploys)
 
+Features:
+
+ - Custom normalization of data according to highest daily case count per state
+ - Link to various state configurations
+ - Preset regions and state groupings
+ - Copy link to current state configuration
+ - Save default state or group of states
+
 [![](gitimg/covidbystate.png)](https://covidbystate.org)
 
 ## Project setup
