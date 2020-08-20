@@ -30,14 +30,12 @@
 
 <script>
 import Highcharts from 'highcharts'
-// import SubComponent from '@/components/SubComponent.vue'
 
 
 export default {
   name: 'Chart',
 
   components: {
-    // SubComponent
   },
 
   props:['chartData'],
@@ -65,7 +63,7 @@ export default {
           useHTML:true,
           headerFormat:'',
           pointFormat:'<span class="hc-tooltip-legend">{series.name}</span>',
-          footerFormat:''//'<span class="hc-tooltip-val">{point.y}% of Highest Day</span>'
+          footerFormat:''//'<span class="hc-tooltip-val">covidbystate.org</span>'
         },
         xAxis: {
             type: 'datetime'

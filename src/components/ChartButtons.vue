@@ -230,7 +230,7 @@ export default {
   methods: {
     toggleSelectState(state) {
 
-      let stateIndex = this.statesForURL.indexOf(state)
+      const stateIndex = this.statesForURL.indexOf(state)
       if (stateIndex == -1) {
         this.statesForURL.push(state)
       } else {
@@ -307,7 +307,7 @@ export default {
     },
 
     updateURL() {
-      let paramString = this.statesForURL.join('-')
+      const paramString = this.statesForURL.join('-')
       this.$router.push({path: `/${paramString}`})
     },
 
