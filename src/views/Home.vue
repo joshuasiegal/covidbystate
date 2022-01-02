@@ -4,6 +4,14 @@
     <div>
       <chart-buttons :selected-states="selectedStates" :states="states"></chart-buttons>
 
+      <div id="source-select-cont">
+        <select v-model="activeSourceKey">
+          <option v-for="source in sources" :value="source.id">
+            {{ source.label }}
+          </option>
+        </select>
+      </div>
+
       <loader v-if="dataLoading"></loader>
 
       <div id="chart-container" v-if="!dataLoading">
@@ -61,26 +69,31 @@ export default {
     stateMetaData: {},
     rollingAvgSize: 7,
     activeSourceKey: 'ctp',
-    sources: {
-      cdc: {
+    sources: [
+      {
+        id: 'cdc',
         url: 'https://data.cdc.gov/resource/9mfq-cb36.json',
         label: 'Centers for Disease Control'
       },
-      ctp: {
+      {
+        id: 'ctp',
         url: 'https://api.covidtracking.com/v1/states/daily.json',
         label: 'Covid Tracking Project'
       },
-      actnow: {
+      {
+        id: 'actnow',
         url: 'https://api.covidactnow.org/v2/states.timeseries.json?apiKey=435a557a83da465b9f100b312a947077',
         label: 'Covid ActNow'
       }
-    }
+    ]
   }),
 
   methods: {
 
     getCovidData() {
       this.dataLoading = true
+
+      console.log("get data from", this.activeSource.url)
 
       fetch(this.activeSource.url)
         .then(response => response.json())
@@ -251,6 +264,10 @@ export default {
       } else {
         this.getCovidData()
       }
+    },
+
+    activeSourceKey: function() {
+      this.getCovidData()
     }
   },
 
@@ -258,7 +275,7 @@ export default {
     activeParser: function() {
       let parser
       switch (this.activeSourceKey) {
-        case 'cdc':  //cdc, ctp, actnow
+        case 'cdc':
           parser = this.normalizeCDCData
           break
         case 'ctp':
@@ -273,7 +290,10 @@ export default {
     },
 
     activeSource: function() {
-      return this.sources[this.activeSourceKey]
+      console.log("computing active source!")
+      return this.sources.filter((source) => {
+        return source.id == this.activeSourceKey
+      })[0]
     }
   },
 
