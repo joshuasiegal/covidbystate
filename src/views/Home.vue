@@ -5,7 +5,7 @@
       <chart-buttons :selected-states="selectedStates" :states="states"></chart-buttons>
 
       <div id="source-select-cont">
-        <select v-model="activeSourceKey">
+        <select v-model="activeSourceKey" :disabled="dataLoading">
           <option v-for="source in sources" :value="source.id">
             {{ source.label }}
           </option>
@@ -110,11 +110,13 @@ export default {
     normalizeCDCData(data) {
       console.log("CDC Data")
       console.dir(data)
+      this.dataLoading = false
     },
 
     normalizeActNowData(data) {
       console.log("ActNow Data")
       console.log(data)
+      this.dataLoading = false
     },
 
     normalizeCTPData(data) {
@@ -294,7 +296,6 @@ export default {
     },
 
     activeSource: function() {
-      console.log("computing active source!")
       return this.sources.filter((source) => {
         return source.id == this.activeSourceKey
       })[0]
