@@ -59,91 +59,48 @@ export default {
     states: ['AK', 'AL', 'AR', 'AS', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'GU', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MP', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UM', 'UT', 'VA', 'VI', 'VT', 'WA', 'WI', 'WV', 'WY'],
     selectedStates: [],
     stateMetaData: {},
-    rollingAvgSize: 7
+    rollingAvgSize: 7,
+    activeSourceKey: 'ctp',
+    sources: {
+      cdc: {
+        url: 'https://data.cdc.gov/resource/9mfq-cb36.json',
+        label: 'Centers for Disease Control'
+      },
+      ctp: {
+        url: 'https://api.covidtracking.com/v1/states/daily.json',
+        label: 'Covid Tracking Project'
+      },
+      actnow: {
+        url: 'https://api.covidactnow.org/v2/states.timeseries.json?apiKey=435a557a83da465b9f100b312a947077',
+        label: 'Covid ActNow'
+      }
+    }
   }),
 
   methods: {
 
     getCovidData() {
-      /*
-      //covid data response is now > 5MB, so too large for localstorage
-      //TODO: find another cache option?
-      const cacheDate = parseInt(localStorage.getItem('cacheDate'),10) || 0
-      const curDate = parseInt(this.getCurrentDateString())
-      if (curDate > cacheDate) {
-        this.fetchCovidData()
-      } else {
-        this.getCovidCache()
-      }
-      */
-
-      this.fetchCovidData()
-    },
-
-    /*
-    //see above method - API data is now too large to cache in localStorage
-    getCovidCache() {
-      const rawCache = localStorage.getItem('covidCache')
-      if (!rawCache) {
-        this.fetchCovidData()
-        return
-      }
-
-      const cache = JSON.parse(rawCache)
-
-      this.normalizeDataByState(cache)
-    },
-    */
-
-    /*
-    //see above method - API data is now too large to cache in localStorage
-    setCovidCache(covidData) {
-
-      localStorage.setItem('covidCache', '')
-      localStorage.setItem('cacheDate', '')
-
-      try {
-        localStorage.setItem('covidCache', JSON.stringify(covidData))
-      } catch(e) {
-        console.error(e)
-        return
-      }
-
-      const curDate = this.getCurrentDateString()
-      localStorage.setItem('cacheDate', curDate)
-    },
-    */
-
-    fetchCovidData() {
       this.dataLoading = true
 
-      fetch('https://api.covidtracking.com/v1/states/daily.json')
-
-
+      fetch(this.activeSource.url)
         .then(response => response.json())
         .then(data => {
-
-          // see above - covid API response data is now too large for localStorage
-          //this.setCovidCache(data)
-
-          this.normalizeDataByState(data)
+          this.activeParser(data)
+          //this.normalizeDataByState(data)
         })
     },
 
-    /*
-    //see above method - API data is now too large to cache in localStorage
-    getCurrentDateString() {
-      const curDateObj = new Date()
-      const year = curDateObj.getFullYear().toString()
-      let month = curDateObj.getMonth() + 1
-      month = (month < 10) ? '0' + month : month.toString()
-      let date = curDateObj.getDate()
-      date = (date < 10) ? '0' + date : date.toString()
-      return year + month + date
+    normalizeCDCData(data) {
+      console.log("CDC Data")
+      console.dir(data)
     },
-    */
 
-    normalizeDataByState(data) {
+    normalizeActNowData(data) {
+      console.log("ActNow Data")
+      console.log(data)
+    },
+
+    normalizeCTPData(data) {
 
       let stateNormedData = {};
 
@@ -298,7 +255,26 @@ export default {
   },
 
   computed: {
+    activeParser: function() {
+      let parser
+      switch (this.activeSourceKey) {
+        case 'cdc':  //cdc, ctp, actnow
+          parser = this.normalizeCDCData
+          break
+        case 'ctp':
+          parser = this.normalizeCTPData
+          break
+        case 'actnow':
+          parser = this.normalizeActNowData
+          break
+      }//switch
 
+      return parser
+    },
+
+    activeSource: function() {
+      return this.sources[this.activeSourceKey]
+    }
   },
 
   created() {
