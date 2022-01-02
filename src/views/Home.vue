@@ -31,9 +31,13 @@
 <style scoped lang="scss">
 
   #chart-container {
-    width:80%;
-    min-height:400px;
-    margin:0px auto;
+    width: 80%;
+    min-height: 400px;
+    margin: 0px auto;
+  }
+
+  #source-select-cont {
+    padding-bottom: 24px;
   }
 
   @media (min-width: 320px) and (max-width: 1000px) {
