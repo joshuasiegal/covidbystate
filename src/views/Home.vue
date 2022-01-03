@@ -54,6 +54,9 @@ import Loader from '@/components/Loader'
 import Chart from '@/components/Chart'
 import Info from '@/components/Info'
 import Signup from '@/components/Signup'
+import * as cdcParser from '@/parsers/cdcParser.js'
+import * as ctpParser from '@/parsers/ctpParser.js'
+import * as actnowParser from '@/parsers/actnowParser.js'
 
 export default {
   name: 'Home',
@@ -72,7 +75,7 @@ export default {
     selectedStates: [],
     stateMetaData: {},
     rollingAvgSize: 7,
-    activeSourceKey: 'ctp',
+    activeSourceKey: 'cdc',
     sources: [
       {
         id: 'cdc',
@@ -97,8 +100,6 @@ export default {
     getCovidData() {
       this.dataLoading = true
 
-      console.log("get data from", this.activeSource.url)
-
       fetch(this.activeSource.url)
         .then(response => response.json())
         .then(data => {
@@ -106,117 +107,6 @@ export default {
           //this.normalizeDataByState(data)
         })
     },
-
-    normalizeCDCData(data) {
-      console.log("CDC Data")
-      console.dir(data)
-      this.dataLoading = false
-    },
-
-    normalizeActNowData(data) {
-      console.log("ActNow Data")
-      console.log(data)
-      this.dataLoading = false
-    },
-
-    normalizeCTPData(data) {
-
-      let stateNormedData = {};
-
-      //prefill stateNormedData and stateMetaData for states
-      this.states.map(state => {
-        stateNormedData[state] = []
-        this.stateMetaData[state] = {}
-      })
-
-
-      //manipulate data
-
-      const dataLength = data.length
-      
-      //fill stateNormedData with data per state
-      //reverse b/c COVID-19 Tracker data is chornologically backwards
-      for (let d=dataLength-1; d>=0; d--) {
-        let cd = data[d]
-        if (cd.date > 20200301) {
-          stateNormedData[cd.state].push(cd)
-        }
-      }
-
-      //make high points
-      for (let state in stateNormedData) {
-        const theStateData = stateNormedData[state]
-        const theStateDataLength = theStateData.length
-        const stateMeta = this.stateMetaData[state]
-        stateMeta.highPoint = 0
-
-        for (let hp=0; hp<theStateDataLength; hp++) {
-          const currentData = theStateData[hp]
-          const currentHighPoint = stateMeta.highPoint
-          const posIncrease = currentData.positiveIncrease
-
-          if (posIncrease > currentHighPoint) {
-            stateMeta.highPoint = posIncrease
-          }
-        }
-      }
-
-
-      const rollingAvgSize = this.rollingAvgSize
-
-      // normalize and format state-level data
-      for (let state in stateNormedData) {
-        const theStateData = stateNormedData[state]
-        const theStateDataLength = theStateData.length
-        const stateMeta = this.stateMetaData[state]
-        const theStateChartData = this.stateChartData[state]
-
-        const avgBuffer = []
-        const normAvgBuffer = []
-        
-        for (let hp=0; hp<theStateDataLength; hp++) {
-          const currentData = theStateData[hp]
-          const posIncrease = currentData.positiveIncrease
-          
-          //normalize
-          const percHighPoint = Math.round((posIncrease / stateMeta.highPoint) * 100)
-          currentData.percentOfHighPoint = percHighPoint
-        
-          /*
-          //raw rolling avg
-          avgBuffer.push(posIncrease)
-          if (avgBuffer.length > rollingAvgSize) {
-            avgBuffer.shift()
-          }
-          const sumBuffer = avgBuffer.reduce((acc, cur) => acc + cur)
-          currentData.rollingAverage = Math.round(sumBuffer / rollingAvgSize)
-          */
-
-          //normalized avg
-          normAvgBuffer.push(percHighPoint)
-          if (normAvgBuffer.length > rollingAvgSize) {
-            normAvgBuffer.shift()
-          }
-          const normSumBuffer = normAvgBuffer.reduce((acc, cur) => acc + cur)
-          currentData.normRollingAverage = Math.round(normSumBuffer / rollingAvgSize)
-
-          //date
-          const curDateString = currentData.date.toString()
-          const curDateFormatted = curDateString.slice(0,4) + "-" + curDateString.slice(4,6) + "-" + curDateString.slice(6,8)
-          //TODO: improve this - gotta be super slow
-          // -- contacted Covid Tracking Project about this - see API v2?
-          currentData.datems = new Date(curDateFormatted).getTime()
-        }
-      }
-
-      //assign to data
-      this.allCovidData = stateNormedData
-      this.allCovidData.populated = true
-
-      this.covidDataReady()
-
-    },
-
 
     covidDataReady() {
       if (this.selectedStates.length) {
@@ -242,7 +132,7 @@ export default {
         const stateCovidDataLength = stateCovidData.length
         for (let sd=0; sd<stateCovidDataLength; sd++) {
           let thisDataPoint = stateCovidData[sd]
-          stateSeriesObj.data.push([thisDataPoint.datems, thisDataPoint.normRollingAverage]) //percentOfHighPoint | rollingAverage | normRollingAverage | positiveIncrease
+          stateSeriesObj.data.push([thisDataPoint.datems, thisDataPoint.normRollingAverage]) //percentOfHighPoint | normRollingAverage | positiveIncrease
         }
         
         localStateChartData.push(stateSeriesObj)
@@ -282,13 +172,13 @@ export default {
       let parser
       switch (this.activeSourceKey) {
         case 'cdc':
-          parser = this.normalizeCDCData
+          parser = cdcParser.normalizeCDCData
           break
         case 'ctp':
-          parser = this.normalizeCTPData
+          parser = ctpParser.normalizeCTPData
           break
         case 'actnow':
-          parser = this.normalizeActNowData
+          parser = actnowParser.normalizeActNowData
           break
       }//switch
 
