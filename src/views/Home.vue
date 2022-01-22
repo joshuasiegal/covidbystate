@@ -75,11 +75,11 @@ export default {
     selectedStates: [],
     stateMetaData: {},
     rollingAvgSize: 7,
-    activeSourceKey: 'cdc',
+    activeSourceKey: 'actnow',
     sources: [
       {
         id: 'cdc',
-        url: 'https://data.cdc.gov/resource/9mfq-cb36.json',
+        url: 'https://data.cdc.gov/resource/9mfq-cb36.json?$limit=999999',
         label: 'Centers for Disease Control'
       },
       {

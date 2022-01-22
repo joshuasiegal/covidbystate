@@ -63,7 +63,7 @@ export default {
           useHTML:true,
           headerFormat:'',
           pointFormat:'<span class="hc-tooltip-legend">{series.name}</span>',
-          footerFormat:''//'<span class="hc-tooltip-val">covidbystate.org</span>'
+          footerFormat:''
         },
         xAxis: {
             type: 'datetime'

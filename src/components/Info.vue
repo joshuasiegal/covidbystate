@@ -1,14 +1,6 @@
 <template>
   <div id="info">
-
     <p>This site shows the trajectory of daily cases in each state, normalized to each state's largest single day of cases, on a 7-day rolling average.  If a date has a value of <span class="value">50</span>, that means that the number of cases for that day, averaged with 7 days previous to it, is 50% of that state's highest reported number of cases.</p>
-
-    <p>Data provided by the Covid Tracking Project</p>
-    
-    <div class="covid-tracking-project"><a href="https://covidtracking.com" target="_blank"><img src="images/covid_tracking_project.svg" id="cpt-logo" width="120px" /></a></div>
-
-    <!-- <p class="special-thanks">Special thanks: ♥ L * L ♥</p> -->
-
   </div>
 </template>
 

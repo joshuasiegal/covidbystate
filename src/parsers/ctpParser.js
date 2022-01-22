@@ -72,12 +72,14 @@ export function normalizeCTPData(data) {
       const curDateString = currentData.date.toString()
       const curDateFormatted = curDateString.slice(0,4) + "-" + curDateString.slice(4,6) + "-" + curDateString.slice(6,8)
       //TODO: improve this - gotta be super slow
+      // -- Can highcharts take just a different format?
       // -- contacted Covid Tracking Project about this - see API v2?
       currentData.datems = new Date(curDateFormatted).getTime()
     }
   }
 
-  console.log(stateNormedData);
+  console.log("CTP DATA")
+  console.log(stateNormedData)
 
   //assign to data
   this.allCovidData = stateNormedData
