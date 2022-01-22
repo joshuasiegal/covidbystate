@@ -78,6 +78,11 @@ export default {
     activeSourceKey: 'actnow',
     sources: [
       {
+        id: 'actnow',
+        url: 'https://api.covidactnow.org/v2/states.timeseries.json?apiKey=435a557a83da465b9f100b312a947077',
+        label: 'Covid ActNow'
+      },
+      {
         id: 'cdc',
         url: 'https://data.cdc.gov/resource/9mfq-cb36.json?$limit=999999',
         label: 'Centers for Disease Control'
@@ -86,11 +91,6 @@ export default {
         id: 'ctp',
         url: 'https://api.covidtracking.com/v1/states/daily.json',
         label: 'Covid Tracking Project'
-      },
-      {
-        id: 'actnow',
-        url: 'https://api.covidactnow.org/v2/states.timeseries.json?apiKey=435a557a83da465b9f100b312a947077',
-        label: 'Covid ActNow'
       }
     ]
   }),
