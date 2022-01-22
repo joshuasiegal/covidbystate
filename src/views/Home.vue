@@ -12,7 +12,7 @@
         </select>
       </div>
 
-      <loader v-if="dataLoading"></loader>
+      <loader :loading-message="loadingMessage" v-if="dataLoading"></loader>
 
       <div id="chart-container" v-if="!dataLoading">
         <chart :chart-data="stateChartData"></chart>
@@ -75,6 +75,7 @@ export default {
     selectedStates: [],
     stateMetaData: {},
     rollingAvgSize: 7,
+    loadingMessage: '',
     activeSourceKey: 'actnow',
     sources: [
       {
@@ -98,13 +99,15 @@ export default {
   methods: {
 
     getCovidData() {
+      this.loadingMessage = 'Getting data'
       this.dataLoading = true
 
       fetch(this.activeSource.url)
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => {
+          this.loadingMessage = 'Doing the math'
+          return response.json()
+        }).then((data) => {
           this.activeParser(data)
-          //this.normalizeDataByState(data)
         })
     },
 
@@ -114,6 +117,7 @@ export default {
       }
 
       this.dataLoading = false
+      this.loadingMessage = ''
     },
 
 

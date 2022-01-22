@@ -7,6 +7,8 @@
       </div>
     </div>
 
+    <p class="loading-message">{{ loadingMessage }}</p>
+
   </div>
 </template>
 
@@ -57,7 +59,8 @@
 
 <script>
   export default {
-    name: 'Loader'
+    name: 'Loader',
+    props: ['loadingMessage']
   }
 
 </script>

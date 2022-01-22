@@ -78,8 +78,8 @@ export function normalizeCTPData(data) {
     }
   }
 
-  console.log("CTP DATA")
-  console.log(stateNormedData)
+  // console.log("CTP DATA")
+  // console.log(stateNormedData)
 
   //assign to data
   this.allCovidData = stateNormedData
