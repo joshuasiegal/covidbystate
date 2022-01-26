@@ -7,16 +7,17 @@
 
     <div id="conv-regions">
       <div class="mobile-set">
-        <button @click="selectRegion('pacific')" class="button-select-west button-pill">Pacific</button>
-        <button @click="selectRegion('west')" class="button-select-west button-pill">West</button>
-        <button @click="selectRegion('southwest')" class="button-select-southwest button-pill">Southwest</button>
-        <button @click="selectRegion('plains')" class="button-select-southwest button-pill">Plains</button>
-        <button @click="selectRegion('midwest')" class="button-select-midwest button-pill">Midwest</button>
-        <button @click="selectRegion('south')" class="button-select-west button-pill">South</button>
-        <button @click="selectRegion('southeast')" class="button-select-west button-pill">Southeast</button>
-        <button @click="selectRegion('newengland')" class="button-select-west button-pill">New England</button>
-        <button @click="selectRegion('northeast')" class="button-select-west button-pill">Northeast</button>
-        <button @click="selectRegion('territories')" class="button-select-west button-pill">Territories</button>
+        <button @click="selectRegion('largest')" class="button-pill">Largest</button>
+        <button @click="selectRegion('pacific')" class="button-pill">Pacific</button>
+        <button @click="selectRegion('west')" class="button-pill">West</button>
+        <button @click="selectRegion('southwest')" class="button-pill">Southwest</button>
+        <button @click="selectRegion('plains')" class="button-pill">Plains</button>
+        <button @click="selectRegion('midwest')" class="button-pill">Midwest</button>
+        <button @click="selectRegion('south')" class="button-pill">South</button>
+        <button @click="selectRegion('southeast')" class="button-pill">Southeast</button>
+        <button @click="selectRegion('newengland')" class="button-pill">New England</button>
+        <button @click="selectRegion('northeast')" class="button-pill">Northeast</button>
+        <button @click="selectRegion('territories')" class="button-pill">Territories</button>
       </div>
     </div>
 
@@ -41,6 +42,7 @@
     <div id="conv-select-cont">
       <select id="conv-select" v-model="selectedRegion">
         <option value="">Select a Region...</option>
+        <option value="largest">Largest</option>
         <option value="pacific">Pacific</option>
         <option value="west">West</option>
         <option value="southwest">Southwest</option>
@@ -224,6 +226,7 @@ export default {
       newengland: ['ME','VT','NH','MA','RI','CT'],
       northeast: ['NY','PA','DC','NJ','DE','MD'],
       territories: ['GU','MP','PR','UM','AS','VI'],
+      largest: ['CA','TX','NY','IL','FL','OH','PA','NC','GA','MI']
     }
   }),
 
