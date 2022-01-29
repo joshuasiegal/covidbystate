@@ -76,7 +76,7 @@ export default {
     stateMetaData: {},
     rollingAvgSize: 7,
     loadingMessage: '',
-    activeSourceKey: 'actnow',
+    activeSourceKey: 'cdc',
     sources: [
       {
         id: 'actnow',

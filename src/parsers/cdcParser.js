@@ -13,9 +13,14 @@ export function normalizeCDCData(data) {
   //manipulate data
   const dataLength = data.length
 
+  //convert date to ms
+  data.forEach((d) => {
+    d.datems = new Date(d.submission_date).getTime()
+  })
+
   //order by date
   data.sort((a,b) => {
-    return a.submission_date > b.submission_date
+    return (a.datems - b.datems)
   })
 
   //fill stateNormedData with data per state
@@ -77,9 +82,6 @@ export function normalizeCDCData(data) {
       }
       const normSumBuffer = normAvgBuffer.reduce((acc, cur) => acc + cur)
       currentData.normRollingAverage = Math.round(normSumBuffer / rollingAvgSize)
-
-      //date
-      currentData.datems = new Date(currentData.submission_date).getTime()
     }
   }
 
